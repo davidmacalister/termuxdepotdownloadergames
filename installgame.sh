@@ -16,8 +16,8 @@ read -p "Digite seu nome de usuário Steam: " usuario
 read -s -p "Digite sua senha Steam: " senha
 echo
 
-comando_goldsrc="depotdownloader -username $usuario -password '$senha' -remember-password -validate -beta steam_legacy"
-comando_source="depotdownloader -username $usuario -password '$senha' -remember-password -validate"
+comando_goldsrc='depotdownloader -username '"$usuario"' -password '\'''"$senha"'\''' -remember-password -validate -beta steam_legacy'
+comando_source='depotdownloader -username '"$usuario"' -password '\'''"$senha"'\''' -remember-password -validate'
 comandos=()
 
 add_goldsrc_pre25() {
