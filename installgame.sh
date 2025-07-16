@@ -22,18 +22,14 @@ comandos=()
 
 add_goldsrc_pre25() {
     comandos+=(
-        "$comando_goldsrc -app 70  -depot 1   -dir "goldsrc(old)"
-"
-        "$comando_goldsrc -app 130 -depot 130 -dir "goldsrc(old)"
-"
-        "$comando_goldsrc -app 50  -depot 51  -dir "goldsrc(old)"
-"
-        "$comando_goldsrc -app 10  -depot 11  -dir "goldsrc(old)"
-"
-        "$comando_goldsrc -app 20  -depot 21  -dir "goldsrc(old)"
-"
+        "${comando_goldsrc} -app 70  -depot 1   -dir \"goldsrc(old)\""
+        "${comando_goldsrc} -app 130 -depot 130 -dir \"goldsrc(old)\""
+        "${comando_goldsrc} -app 50  -depot 51  -dir \"goldsrc(old)\""
+        "${comando_goldsrc} -app 10  -depot 11  -dir \"goldsrc(old)\""
+        "${comando_goldsrc} -app 20  -depot 21  -dir \"goldsrc(old)\""
     )
 }
+
 
 add_goldsrc() {
     add_goldsrc_pre25
