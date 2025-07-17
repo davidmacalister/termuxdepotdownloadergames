@@ -20,8 +20,7 @@ read -p "Escolha uma opção (1-2): " tela_inicial
 comandos=()
 
 read -p "Digite seu nome de usuário Steam: " usuario
-read -p "Digite sua senha Steam: " -s senha_invisivel
-echo
+echo -n "Digite sua senha Steam: "
 senha=""
 while IFS= read -r -s -n1 char; do
     if [[ -z "$char" ]]; then
