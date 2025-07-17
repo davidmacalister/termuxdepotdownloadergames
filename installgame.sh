@@ -1,83 +1,162 @@
 #!/bin/bash
 
+# Cores ANSI
+NEGRITO="\033[1m"
+RESET="\033[0m"
+AMARELO="\033[33m"
+LARANJA="\033[38;5;208m"
+AZUL="\033[34m"
+VERDE="\033[32m"
+
 clear
-echo "============================"
-echo "    DEPOTDOWNLOADER MENU    "
-echo "============================"
+echo -e "${NEGRITO}[Tela inicial]:${RESET}"
+echo
+echo "Quais jogos você deseja baixar?"
+echo
 echo "1) Todos os jogos"
-echo "2) Todos os jogos Source"
-echo "3) Todos os jogos Goldsrc"
-echo "4) Todos os jogos Goldsrc pré aniversário de 25 anos"
-echo "5) Escolher jogos manualmente"
+echo "2) Escolher manualmente"
 echo "============================"
-read -p "Escolha uma opção (1-5): " opcao
+read -p "Escolha uma opção (1-2): " tela_inicial
+
+comandos=()
 
 read -p "Digite seu nome de usuário Steam: " usuario
 read -s -p "Digite sua senha Steam: " senha
 echo
 
-comando_goldsrc='depotdownloader -username '"$usuario"' -password '\'''"$senha"'\''' -remember-password -validate -beta steam_legacy'
-comando_source='depotdownloader -username '"$usuario"' -password '\'''"$senha"'\''' -remember-password -validate'
-comandos=()
+comando_base="depotdownloader -username $usuario -password '$senha' -remember-password -validate"
 
+# Funções para adicionar comandos
 add_goldsrc_pre25() {
     comandos+=(
-        "${comando_goldsrc} -app 70  -depot 1   -dir goldsrc_old"
-        "${comando_goldsrc} -app 130 -depot 130 -dir goldsrc_old"
-        "${comando_goldsrc} -app 50  -depot 51  -dir goldsrc_old"
-        "${comando_goldsrc} -app 10  -depot 11  -dir goldsrc_old"
-        "${comando_goldsrc} -app 20  -depot 21  -dir goldsrc_old"
+        "$comando_base -beta steam_legacy -app 70  -depot 1   -dir goldsrc_old"
+        "$comando_base -beta steam_legacy -app 130 -depot 130 -dir goldsrc_old"
+        "$comando_base -beta steam_legacy -app 50  -depot 51  -dir goldsrc_old"
+        "$comando_base -beta steam_legacy -app 10  -depot 11  -dir goldsrc_old"
+        "$comando_base -beta steam_legacy -app 20  -depot 21  -dir goldsrc_old"
     )
 }
 
-
-add_goldsrc() {
-    add_goldsrc_pre25
-    # Adicione outros jogos Goldsrc aqui se quiser
+add_goldsrc_25() {
+    comandos+=(
+        "$comando_base -app 70  -depot 1   -dir goldsrc_new"
+        "$comando_base -app 130 -depot 130 -dir goldsrc_new"
+        "$comando_base -app 50  -depot 51  -dir goldsrc_new"
+        "$comando_base -app 10  -depot 11  -dir goldsrc_new"
+        "$comando_base -app 20  -depot 21  -dir goldsrc_new"
+    )
 }
 
 add_source() {
     comandos+=(
-        "$comando_goldsrc -app 220 -depot 221 -dir source"
-        "$comando_goldsrc -app 220 -depot 389 -dir source"
-        "$comando_goldsrc -app 220 -depot 380 -dir source"
-        "$comando_goldsrc -app 220 -depot 420 -dir source"
-        "$comando_source -beta previous_build -app 240 -depot 241 -dir source"
+        "$comando_base -app 220 -depot 221 -dir source"
+        "$comando_base -app 220 -depot 389 -dir source"
+        "$comando_base -app 220 -depot 380 -dir source"
+        "$comando_base -app 220 -depot 420 -dir source"
+        "$comando_base -beta previous_build -app 240 -depot 241 -dir source"
     )
 }
 
-case $opcao in
-    1)
-        add_goldsrc
-        add_source
-        ;;
-    2)
-        add_source
-        ;;
-    3)
-        add_goldsrc
-        ;;
-    4)
-        add_goldsrc_pre25
-        ;;
-    5)
-        echo
-        echo "Digite os jogos manualmente no formato app:depot:dir:beta"
-        echo "Exemplo: 220:221:source:steam_legacy,240:241:source:previous_build"
-        read -p "Entradas separadas por vírgula: " entradas
-        IFS=',' read -ra pares <<< "$entradas"
-        for par in "${pares[@]}"; do
-            IFS=':' read -r app depot dir beta <<< "$par"
-            comandos+=("depotdownloader -username \"$usuario\" -password \"$senha\" -remember-password -validate -beta $beta -app $app -depot $depot -dir $dir")
-        done
-        ;;
-    *)
-        echo "Opção inválida."
-        exit 1
-        ;;
-esac
+# Escolha da opção principal
+if [[ "$tela_inicial" == "1" ]]; then
+    echo
+    echo -e "${NEGRITO}[Tela de todos os Jogos]:${RESET}"
+    echo
+    echo "Quais jogos você deseja baixar?"
+    echo
+    echo "1) Todos os jogos"
+    echo "2) Todos os jogos Source"
+    echo "3) Todos os jogos Goldsrc"
+    echo "============================"
+    read -p "Escolha uma opção (1-3): " todos_opcao
 
+    if [[ "$todos_opcao" == "1" || "$todos_opcao" == "3" ]]; then
+        echo
+        echo -e "${NEGRITO}[Tela de todos os Jogos Goldsrc]:${RESET}"
+        echo
+        echo "Qual versão você deseja dos jogos Goldsrc?"
+        echo
+        echo "1) Versão aniversário de 25 anos"
+        echo -e "${AMARELO}! Aviso: essa é a versão mais recente, melhor para se usar no Xash (new engine)${RESET}"
+        echo "2) Versão pré aniversário de 25 anos"
+        echo -e "${AMARELO}! Aviso: essa é a versão antiga, mais compatível com mods, melhor para se usar no Xash (old engine)${RESET}"
+        echo "3) Ambos"
+        echo "============================"
+        read -p "Escolha uma opção (1-3): " versao_goldsrc
+
+        [[ "$versao_goldsrc" == "1" || "$versao_goldsrc" == "3" ]] && add_goldsrc_25
+        [[ "$versao_goldsrc" == "2" || "$versao_goldsrc" == "3" ]] && add_goldsrc_pre25
+    fi
+
+    [[ "$todos_opcao" == "1" || "$todos_opcao" == "2" ]] && add_source
+
+elif [[ "$tela_inicial" == "2" ]]; then
+    echo
+    echo -e "${NEGRITO}[Tela de escolher manualmente]:${RESET}"
+    echo
+    echo "Quais jogos você deseja baixar?"
+    echo
+    echo -e "${NEGRITO}Jogos Source:${RESET}"
+    echo -e "${LARANJA}1) Half-Life 2${RESET}"
+    echo -e "${LARANJA}2) Half-Life 2: Episode 1${RESET}"
+    echo -e "${LARANJA}3) Half-Life 2: Episode 2${RESET}"
+    echo -e "${LARANJA}4) Half-Life 2: Deathmatch${RESET}"
+    echo -e "${LARANJA}5) Half-Life: Source${RESET}"
+    echo "6) Counter-Strike: Source"
+    echo "7) Day of Defeat: Source"
+    echo -e "${AZUL}8) Portal${RESET}"
+    echo
+    echo -e "${NEGRITO}Jogos Goldsrc:${RESET}"
+    echo -e "${LARANJA}9) Half-Life${RESET}"
+    echo -e "${AZUL}10) Half-Life: Blue Shift${RESET}"
+    echo -e "${VERDE}11) Half-Life: Opposing Force${RESET}"
+    echo "12) Counter-Strike"
+    echo -e "${AMARELO}13) Team Fortress Classic${RESET}"
+    echo "============================"
+    read -p "Escolha uma ou mais opções, separando por vírgulas (1-13): " selecoes
+    IFS=',' read -ra opcoes <<< "$selecoes"
+
+    goldsrc_presente=0
+
+    for opcao in "${opcoes[@]}"; do
+        case "$opcao" in
+            1) comandos+=("$comando_base -app 220 -depot 221 -dir source") ;;
+            2) comandos+=("$comando_base -app 220 -depot 389 -dir source") ;;
+            3) comandos+=("$comando_base -app 220 -depot 380 -dir source") ;;
+            4) comandos+=("$comando_base -app 220 -depot 420 -dir source") ;;
+            5) comandos+=("$comando_base -app 220 -depot 380 -dir source") ;;
+            6) comandos+=("$comando_base -app 240 -depot 241 -dir source -beta previous_build") ;;
+            7) comandos+=("$comando_base -app 300 -depot 301 -dir source") ;;
+            8) comandos+=("$comando_base -app 400 -depot 401 -dir source") ;;
+            9|10|11|12|13) goldsrc_presente=1 ;; # processar depois
+        esac
+    done
+
+    if [[ "$goldsrc_presente" == "1" ]]; then
+        echo
+        echo -e "${NEGRITO}[Tela de escolher manualmente com seleções Goldsrc]:${RESET}"
+        echo
+        echo "Qual versão você deseja dos jogos Goldsrc?"
+        echo
+        echo "1) Versão aniversário de 25 anos"
+        echo -e "${AMARELO}! Aviso: essa é a versão mais recente, melhor para se usar no Xash (new engine)${RESET}"
+        echo "2) Versão pré aniversário de 25 anos"
+        echo -e "${AMARELO}! Aviso: essa é a versão antiga, mais compatível com mods, melhor para se usar no Xash (old engine)${RESET}"
+        echo "3) Ambos"
+        echo "============================"
+        read -p "Escolha uma opção (1-3): " versao_manual
+
+        [[ "$versao_manual" == "1" || "$versao_manual" == "3" ]] && add_goldsrc_25
+        [[ "$versao_manual" == "2" || "$versao_manual" == "3" ]] && add_goldsrc_pre25
+    fi
+else
+    echo "Opção inválida."
+    exit 1
+fi
+
+# Execução final
+echo
 for cmd in "${comandos[@]}"; do
-    echo "Executando: $cmd"
+    echo -e "${NEGRITO}Executando:${RESET} $cmd"
     eval "$cmd" || { echo "Erro ao executar o comando acima."; exit 1; }
 done
