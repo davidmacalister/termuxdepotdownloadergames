@@ -109,23 +109,23 @@ elif [[ "$tela_inicial" == "2" ]]; then
     read -p "Escolha uma ou mais opções, separando por vírgulas (1-13): " selecoes
     IFS=',' read -ra opcoes <<< "$selecoes"
 
-    goldsrc_presente=0
+    goldsrc_opcoes=()
 
     for opcao in "${opcoes[@]}"; do
         case "$opcao" in
-            1) comandos+=("$comando_base -app 220 -depot 221 -dir source") ;;
-            2) comandos+=("$comando_base -app 220 -depot 389 -dir source") ;;
-            3) comandos+=("$comando_base -app 220 -depot 380 -dir source") ;;
-            4) comandos+=("$comando_base -app 220 -depot 420 -dir source") ;;
-            5) comandos+=("$comando_base -app 220 -depot 380 -dir source") ;;
-            6) comandos+=("$comando_base -app 240 -depot 241 -dir source -beta previous_build") ;;
-            7) comandos+=("$comando_base -app 300 -depot 301 -dir source") ;;
-            8) comandos+=("$comando_base -app 400 -depot 401 -dir source") ;;
-            9|10|11|12|13) goldsrc_presente=1 ;; # processar depois
+            1) comandos+=("$comando_base -app 220 -depot 221 -dir source") ;; # HL2
+            2) comandos+=("$comando_base -app 220 -depot 389 -dir source") ;; # EP1
+            3) comandos+=("$comando_base -app 220 -depot 380 -dir source") ;; # EP2
+            4) comandos+=("$comando_base -app 220 -depot 420 -dir source") ;; # Deathmatch
+            5) comandos+=("$comando_base -app 220 -depot 380 -dir source") ;; # HL:Source
+            6) comandos+=("$comando_base -app 240 -depot 241 -dir source -beta previous_build") ;; # CS:S
+            7) comandos+=("$comando_base -app 300 -depot 301 -dir source") ;; # DoD:S
+            8) comandos+=("$comando_base -app 400 -depot 401 -dir source") ;; # Portal
+            9|10|11|12|13) goldsrc_opcoes+=("$opcao") ;; # Guardar opções Goldsrc
         esac
     done
 
-    if [[ "$goldsrc_presente" == "1" ]]; then
+    if [[ "${#goldsrc_opcoes[@]}" -gt 0 ]]; then
         echo
         echo "Qual versão você deseja dos jogos Goldsrc?"
         echo
@@ -137,8 +137,27 @@ elif [[ "$tela_inicial" == "2" ]]; then
         echo "============================"
         read -p "Escolha uma opção (1-3): " versao_manual
 
-        [[ "$versao_manual" == "1" || "$versao_manual" == "3" ]] && add_goldsrc_25
-        [[ "$versao_manual" == "2" || "$versao_manual" == "3" ]] && add_goldsrc_pre25
+        for opcao in "${goldsrc_opcoes[@]}"; do
+            if [[ "$versao_manual" == "1" || "$versao_manual" == "3" ]]; then
+                case "$opcao" in
+                    9)  comandos+=("$comando_base -app 70  -depot 1   -dir goldsrc_new") ;;  # HL
+                    10) comandos+=("$comando_base -app 130 -depot 130 -dir goldsrc_new") ;;  # Blue Shift
+                    11) comandos+=("$comando_base -app 50  -depot 51  -dir goldsrc_new") ;;  # Opposing Force
+                    12) comandos+=("$comando_base -app 10  -depot 11  -dir goldsrc_new") ;;  # CS
+                    13) comandos+=("$comando_base -app 20  -depot 21  -dir goldsrc_new") ;;  # TFC
+                esac
+            fi
+
+            if [[ "$versao_manual" == "2" || "$versao_manual" == "3" ]]; then
+                case "$opcao" in
+                    9)  comandos+=("$comando_base -beta steam_legacy -app 70  -depot 1   -dir goldsrc_old") ;;
+                    10) comandos+=("$comando_base -beta steam_legacy -app 130 -depot 130 -dir goldsrc_old") ;;
+                    11) comandos+=("$comando_base -beta steam_legacy -app 50  -depot 51  -dir goldsrc_old") ;;
+                    12) comandos+=("$comando_base -beta steam_legacy -app 10  -depot 11  -dir goldsrc_old") ;;
+                    13) comandos+=("$comando_base -beta steam_legacy -app 20  -depot 21  -dir goldsrc_old") ;;
+                esac
+            fi
+        done
     fi
 else
     echo "Opção inválida."
