@@ -9,7 +9,6 @@ AZUL="\033[34m"
 VERDE="\033[32m"
 
 clear
-echo -e "${NEGRITO}[Tela inicial]:${RESET}"
 echo
 echo "Quais jogos você deseja baixar?"
 echo
@@ -60,8 +59,6 @@ add_source() {
 # Escolha da opção principal
 if [[ "$tela_inicial" == "1" ]]; then
     echo
-    echo -e "${NEGRITO}[Tela de todos os Jogos]:${RESET}"
-    echo
     echo "Quais jogos você deseja baixar?"
     echo
     echo "1) Todos os jogos"
@@ -71,8 +68,6 @@ if [[ "$tela_inicial" == "1" ]]; then
     read -p "Escolha uma opção (1-3): " todos_opcao
 
     if [[ "$todos_opcao" == "1" || "$todos_opcao" == "3" ]]; then
-        echo
-        echo -e "${NEGRITO}[Tela de todos os Jogos Goldsrc]:${RESET}"
         echo
         echo "Qual versão você deseja dos jogos Goldsrc?"
         echo
@@ -91,8 +86,6 @@ if [[ "$tela_inicial" == "1" ]]; then
     [[ "$todos_opcao" == "1" || "$todos_opcao" == "2" ]] && add_source
 
 elif [[ "$tela_inicial" == "2" ]]; then
-    echo
-    echo -e "${NEGRITO}[Tela de escolher manualmente]:${RESET}"
     echo
     echo "Quais jogos você deseja baixar?"
     echo
@@ -133,8 +126,6 @@ elif [[ "$tela_inicial" == "2" ]]; then
     done
 
     if [[ "$goldsrc_presente" == "1" ]]; then
-        echo
-        echo -e "${NEGRITO}[Tela de escolher manualmente com seleções Goldsrc]:${RESET}"
         echo
         echo "Qual versão você deseja dos jogos Goldsrc?"
         echo
