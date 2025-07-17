@@ -15,6 +15,51 @@ go_back_menu() {
     clear
 }
 
+download_all_goldsrc() {
+    clear
+    echo
+    echo "Which version of Goldsrc games do you want to download?"
+    echo
+    echo "1) 25th Anniversary version"
+    echo -e "${YELLOW}! Warning: this is the latest version, better for use with Xash (new engine)${RESET}"
+    echo "2) Pre-25th Anniversary version"
+    echo -e "${YELLOW}! Warning: this is the older version, more compatible with mods, better for use with Xash (old engine)${RESET}"
+    echo "3) Both"
+    echo "============================"
+    read -p "Choose an option (1-3): " goldsrc_version_all
+
+    if [[ "$goldsrc_version_all" == "1" || "$goldsrc_version_all" == "3" ]]; then
+        commands+=("$base_command -app 70  -depot 1   -dir goldsrc_new")  # Half-Life
+        commands+=("$base_command -app 130 -depot 130 -dir goldsrc_new") # Blue Shift
+        commands+=("$base_command -app 50  -depot 51  -dir goldsrc_new") # Opposing Force
+        commands+=("$base_command -app 10  -depot 11  -dir goldsrc_new") # Counter-Strike
+        commands+=("$base_command -app 20  -depot 21  -dir goldsrc_new") # Team Fortress Classic
+    fi
+
+    if [[ "$goldsrc_version_all" == "2" || "$goldsrc_version_all" == "3" ]]; then
+        commands+=("$base_command -beta steam_legacy -app 70  -depot 1   -dir goldsrc_old")  # Half-Life
+        commands+=("$base_command -beta steam_legacy -app 130 -depot 130 -dir goldsrc_old") # Blue Shift
+        commands+=("$base_command -beta steam_legacy -app 50  -depot 51  -dir goldsrc_old") # Opposing Force
+        commands+=("$base_command -beta steam_legacy -app 10  -depot 11  -dir goldsrc_old") # Counter-Strike
+        commands+=("$base_command -beta steam_legacy -app 20  -depot 21  -dir goldsrc_old") # Team Fortress Classic
+    fi
+}
+
+download_all_source() {
+    clear
+    echo
+    echo "Downloading all Source games..."
+    commands+=("$base_command -app 220 -depot 221 -dir source") # Half-Life 2
+    commands+=("$base_command -app 220 -depot 389 -dir source") # Episode 1
+    commands+=("$base_command -app 220 -depot 380 -dir source") # Episode 2
+    commands+=("$base_command -app 220 -depot 420 -dir source") # Deathmatch
+    commands+=("$base_command -app 240 -depot 241 -dir source -beta previous_build") # Counter-Strike: Source
+    commands+=("$base_command -app 300 -depot 301 -dir source") # Day of Defeat: Source
+    commands+=("$base_command -app 400 -depot 401 -dir source") # Portal
+    echo -e "${GREEN}All Source games added to the download queue.${RESET}"
+    sleep 1
+}
+
 # Main menu selection
 while true; do
     clear
@@ -45,44 +90,22 @@ while true; do
             echo
             echo "Which games do you want to download?"
             echo
-            echo "1) All games"
-            echo "2) All Source games"
-            echo "3) All Goldsrc games"
+            echo "1) All Source games"
+            echo "2) All Goldsrc games"
             echo "b) Go back"
             echo "============================"
-            read -p "Choose an option (1-3): " all_games_option
+            read -p "Choose an option (1-2): " all_games_option
 
             if [[ "$all_games_option" == "b" ]]; then
                 go_back_menu
                 break
             fi
 
-            if [[ "$all_games_option" == "1" || "$all_games_option" == "3" ]]; then
-                while true; do
-                    clear
-                    echo
-                    echo "Which version of Goldsrc games do you want?"
-                    echo
-                    echo "1) 25th Anniversary version"
-                    echo -e "${YELLOW}! Warning: this is the latest version, better for use with Xash (new engine)${RESET}"
-                    echo "2) Pre-25th Anniversary version"
-                    echo -e "${YELLOW}! Warning: this is the older version, more compatible with mods, better for use with Xash (old engine)${RESET}"
-                    echo "3) Both"
-                    echo "b) Go back"
-                    echo "============================"
-                    read -p "Choose an option (1-3): " goldsrc_version
-
-                    if [[ "$goldsrc_version" == "b" ]]; then
-                        go_back_menu
-                        break
-                    fi
-
-                    [[ "$goldsrc_version" == "1" || "$goldsrc_version" == "3" ]] && add_goldsrc_25
-                    [[ "$goldsrc_version" == "2" || "$goldsrc_version" == "3" ]] && add_goldsrc_pre25
-                done
+            if [[ "$all_games_option" == "1" ]]; then
+                download_all_source
+            elif [[ "$all_games_option" == "2" ]]; then
+                download_all_goldsrc
             fi
-
-            [[ "$all_games_option" == "1" || "$all_games_option" == "2" ]] && add_source
             break
         done
 
