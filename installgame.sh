@@ -23,7 +23,7 @@ while true; do
     echo
     echo "1) All games"
     echo "2) Select manually"
-    echo "${RED}e) Exit${RESET}"
+    echo -e "${RED}e) Exit${RESET}"
     echo "============================"
     read -p "Choose an option (1-2): " main_menu
 
