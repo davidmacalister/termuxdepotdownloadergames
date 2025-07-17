@@ -1,177 +1,178 @@
 #!/bin/bash
 
-# Cores ANSI
-NEGRITO="\033[1m"
+# ANSI Colors
+BOLD="\033[1m"
 RESET="\033[0m"
-AMARELO="\033[33m"
-LARANJA="\033[38;5;208m"
-AZUL="\033[34m"
-VERDE="\033[32m"
+YELLOW="\033[33m"
+ORANGE="\033[38;5;208m"
+BLUE="\033[34m"
+RED="\033[38;5;196m"
+GREEN="\033[32m"
 
-voltar_menu() {
-    echo -e "${AMARELO}Voltando ao menu anterior...${RESET}"
+go_back_menu() {
+    echo -e "${YELLOW}Returning to the previous menu...${RESET}"
     sleep 1
     clear
 }
 
-# Escolha da opção principal
+# Main menu selection
 while true; do
     clear
     echo
-    echo "Quais jogos você deseja baixar?"
+    echo "Which games do you want to download?"
     echo
-    echo "1) Todos os jogos"
-    echo "2) Escolher manualmente"
-    echo "b) Voltar"
+    echo "1) All games"
+    echo "2) Select manually"
+    echo "${RED}e) Exit${RED}"
     echo "============================"
-    read -p "Escolha uma opção (1-2 ou b): " tela_inicial
+    read -p "Choose an option (1-2): " main_menu
 
-    if [[ "$tela_inicial" == "b" ]]; then
-        voltar_menu
-        continue
+    if [[ "$main_menu" == "e" ]]; then
+        echo -e "${YELLOW}Exiting the application...${RESET}"
+        exit 0
     fi
 
-    comandos=()
+    commands=()
 
-    read -p "Digite seu nome de usuário Steam: " usuario
-    read -p "Digite sua senha Steam: " senha
+    read -p "Enter your Steam username: " username
+    read -p "Enter your Steam password: " password
 
-    comando_base="depotdownloader -username $usuario -password '$senha' -remember-password -validate"
+    base_command="depotdownloader -username $username -password '$password' -remember-password -validate"
 
-    if [[ "$tela_inicial" == "1" ]]; then
+    if [[ "$main_menu" == "1" ]]; then
         while true; do
             clear
             echo
-            echo "Quais jogos você deseja baixar?"
+            echo "Which games do you want to download?"
             echo
-            echo "1) Todos os jogos"
-            echo "2) Todos os jogos Source"
-            echo "3) Todos os jogos Goldsrc"
-            echo "b) Voltar"
+            echo "1) All games"
+            echo "2) All Source games"
+            echo "3) All Goldsrc games"
+            echo "b) Go back"
             echo "============================"
-            read -p "Escolha uma opção (1-3 ou b): " todos_opcao
+            read -p "Choose an option (1-3): " all_games_option
 
-            if [[ "$todos_opcao" == "b" ]]; then
-                voltar_menu
+            if [[ "$all_games_option" == "b" ]]; then
+                go_back_menu
                 break
             fi
 
-            if [[ "$todos_opcao" == "1" || "$todos_opcao" == "3" ]]; then
+            if [[ "$all_games_option" == "1" || "$all_games_option" == "3" ]]; then
                 while true; do
                     clear
                     echo
-                    echo "Qual versão você deseja dos jogos Goldsrc?"
+                    echo "Which version of Goldsrc games do you want?"
                     echo
-                    echo "1) Versão aniversário de 25 anos"
-                    echo -e "${AMARELO}! Aviso: essa é a versão mais recente, melhor para se usar no Xash (new engine)${RESET}"
-                    echo "2) Versão pré aniversário de 25 anos"
-                    echo -e "${AMARELO}! Aviso: essa é a versão antiga, mais compatível com mods, melhor para se usar no Xash (old engine)${RESET}"
-                    echo "3) Ambos"
-                    echo "b) Voltar"
+                    echo "1) 25th Anniversary version"
+                    echo -e "${YELLOW}! Warning: this is the latest version, better for use with Xash (new engine)${RESET}"
+                    echo "2) Pre-25th Anniversary version"
+                    echo -e "${YELLOW}! Warning: this is the older version, more compatible with mods, better for use with Xash (old engine)${RESET}"
+                    echo "3) Both"
+                    echo "b) Go back"
                     echo "============================"
-                    read -p "Escolha uma opção (1-3 ou b): " versao_goldsrc
+                    read -p "Choose an option (1-3): " goldsrc_version
 
-                    if [[ "$versao_goldsrc" == "b" ]]; then
-                        voltar_menu
+                    if [[ "$goldsrc_version" == "b" ]]; then
+                        go_back_menu
                         break
                     fi
 
-                    [[ "$versao_goldsrc" == "1" || "$versao_goldsrc" == "3" ]] && add_goldsrc_25
-                    [[ "$versao_goldsrc" == "2" || "$versao_goldsrc" == "3" ]] && add_goldsrc_pre25
+                    [[ "$goldsrc_version" == "1" || "$goldsrc_version" == "3" ]] && add_goldsrc_25
+                    [[ "$goldsrc_version" == "2" || "$goldsrc_version" == "3" ]] && add_goldsrc_pre25
                 done
             fi
 
-            [[ "$todos_opcao" == "1" || "$todos_opcao" == "2" ]] && add_source
+            [[ "$all_games_option" == "1" || "$all_games_option" == "2" ]] && add_source
             break
         done
 
-    elif [[ "$tela_inicial" == "2" ]]; then
+    elif [[ "$main_menu" == "2" ]]; then
         while true; do
             clear
             echo
-            echo "Quais jogos você deseja baixar?"
+            echo "Which games do you want to download?"
             echo
-            echo -e "${NEGRITO}Jogos Source:${RESET}"
-            echo -e "${LARANJA}1) Half-Life 2${RESET}"
-            echo -e "${LARANJA}2) Half-Life 2: Episode 1${RESET}"
-            echo -e "${LARANJA}3) Half-Life 2: Episode 2${RESET}"
-            echo -e "${LARANJA}4) Half-Life 2: Deathmatch${RESET}"
-            echo -e "${LARANJA}5) Half-Life: Source${RESET}"
+            echo -e "${BOLD}Source Games:${RESET}"
+            echo -e "${ORANGE}1) Half-Life 2${RESET}"
+            echo -e "${ORANGE}2) Half-Life 2: Episode 1${RESET}"
+            echo -e "${ORANGE}3) Half-Life 2: Episode 2${RESET}"
+            echo -e "${ORANGE}4) Half-Life 2: Deathmatch${RESET}"
+            echo -e "${ORANGE}5) Half-Life: Source${RESET}"
             echo "6) Counter-Strike: Source"
             echo "7) Day of Defeat: Source"
-            echo -e "${AZUL}8) Portal${RESET}"
+            echo -e "${BLUE}8) Portal${RESET}"
             echo
-            echo -e "${NEGRITO}Jogos Goldsrc:${RESET}"
-            echo -e "${LARANJA}9) Half-Life${RESET}"
-            echo -e "${AZUL}10) Half-Life: Blue Shift${RESET}"
-            echo -e "${VERDE}11) Half-Life: Opposing Force${RESET}"
+            echo -e "${BOLD}Goldsrc Games:${RESET}"
+            echo -e "${ORANGE}9) Half-Life${RESET}"
+            echo -e "${BLUE}10) Half-Life: Blue Shift${RESET}"
+            echo -e "${GREEN}11) Half-Life: Opposing Force${RESET}"
             echo "12) Counter-Strike"
-            echo -e "${AMARELO}13) Team Fortress Classic${RESET}"
-            echo "b) Voltar"
+            echo -e "${YELLOW}13) Team Fortress Classic${RESET}"
+            echo "b) Go back"
             echo "============================"
-            read -p "Escolha uma ou mais opções, separando por vírgulas (1-13 ou b): " selecoes
+            read -p "Choose one or more options, separated by commas (1-13): " selections
 
-            if [[ "$selecoes" == "b" ]]; then
-                voltar_menu
+            if [[ "$selections" == "b" ]]; then
+                go_back_menu
                 break
             fi
 
-            IFS=',' read -ra opcoes <<< "$selecoes"
+            IFS=',' read -ra options <<< "$selections"
 
-            goldsrc_opcoes=()
+            goldsrc_options=()
 
-            for opcao in "${opcoes[@]}"; do
-                case "$opcao" in
-                    1) comandos+=("$comando_base -app 220 -depot 221 -dir source") ;; # HL2
-                    2) comandos+=("$comando_base -app 220 -depot 389 -dir source") ;; # EP1
-                    3) comandos+=("$comando_base -app 220 -depot 380 -dir source") ;; # EP2
-                    4) comandos+=("$comando_base -app 220 -depot 420 -dir source") ;; # Deathmatch
-                    5) comandos+=("$comando_base -app 220 -depot 380 -dir source") ;; # HL:Source
-                    6) comandos+=("$comando_base -app 240 -depot 241 -dir source -beta previous_build") ;; # CS:S
-                    7) comandos+=("$comando_base -app 300 -depot 301 -dir source") ;; # DoD:S
-                    8) comandos+=("$comando_base -app 400 -depot 401 -dir source") ;; # Portal
-                    9|10|11|12|13) goldsrc_opcoes+=("$opcao") ;; # Guardar opções Goldsrc
+            for option in "${options[@]}"; do
+                case "$option" in
+                    1) commands+=("$base_command -app 220 -depot 221 -dir source") ;; # HL2
+                    2) commands+=("$base_command -app 220 -depot 389 -dir source") ;; # EP1
+                    3) commands+=("$base_command -app 220 -depot 380 -dir source") ;; # EP2
+                    4) commands+=("$base_command -app 220 -depot 420 -dir source") ;; # Deathmatch
+                    5) commands+=("$base_command -app 220 -depot 380 -dir source") ;; # HL:Source
+                    6) commands+=("$base_command -app 240 -depot 241 -dir source -beta previous_build") ;; # CS:S
+                    7) commands+=("$base_command -app 300 -depot 301 -dir source") ;; # DoD:S
+                    8) commands+=("$base_command -app 400 -depot 401 -dir source") ;; # Portal
+                    9|10|11|12|13) goldsrc_options+=("$option") ;; # Store Goldsrc options
                 esac
             done
 
-            if [[ "${#goldsrc_opcoes[@]}" -gt 0 ]]; then
+            if [[ "${#goldsrc_options[@]}" -gt 0 ]]; then
                 while true; do
                     clear
                     echo
-                    echo "Qual versão você deseja dos jogos Goldsrc?"
+                    echo "Which version of Goldsrc games do you want?"
                     echo
-                    echo "1) Versão aniversário de 25 anos"
-                    echo -e "${AMARELO}! Aviso: essa é a versão mais recente, melhor para se usar no Xash (new engine)${RESET}"
-                    echo "2) Versão pré aniversário de 25 anos"
-                    echo -e "${AMARELO}! Aviso: essa é a versão antiga, mais compatível com mods, melhor para se usar no Xash (old engine)${RESET}"
-                    echo "3) Ambos"
-                    echo "b) Voltar"
+                    echo "1) 25th Anniversary version"
+                    echo -e "${YELLOW}! Warning: this is the latest version, better for use with Xash (new engine)${RESET}"
+                    echo "2) Pre-25th Anniversary version"
+                    echo -e "${YELLOW}! Warning: this is the older version, more compatible with mods, better for use with Xash (old engine)${RESET}"
+                    echo "3) Both"
+                    echo "b) Go back"
                     echo "============================"
-                    read -p "Escolha uma opção (1-3 ou b): " versao_manual
+                    read -p "Choose an option (1-3): " manual_version
 
-                    if [[ "$versao_manual" == "b" ]]; then
-                        voltar_menu
+                    if [[ "$manual_version" == "b" ]]; then
+                        go_back_menu
                         break
                     fi
 
-                    for opcao in "${goldsrc_opcoes[@]}"; do
-                        if [[ "$versao_manual" == "1" || "$versao_manual" == "3" ]]; then
-                            case "$opcao" in
-                                9)  comandos+=("$comando_base -app 70  -depot 1   -dir goldsrc_new") ;;  # HL
-                                10) comandos+=("$comando_base -app 130 -depot 130 -dir goldsrc_new") ;;  # Blue Shift
-                                11) comandos+=("$comando_base -app 50  -depot 51  -dir goldsrc_new") ;;  # Opposing Force
-                                12) comandos+=("$comando_base -app 10  -depot 11  -dir goldsrc_new") ;;  # CS
-                                13) comandos+=("$comando_base -app 20  -depot 21  -dir goldsrc_new") ;;  # TFC
+                    for option in "${goldsrc_options[@]}"; do
+                        if [[ "$manual_version" == "1" || "$manual_version" == "3" ]]; then
+                            case "$option" in
+                                9)  commands+=("$base_command -app 70  -depot 1   -dir goldsrc_new") ;;  # HL
+                                10) commands+=("$base_command -app 130 -depot 130 -dir goldsrc_new") ;;  # Blue Shift
+                                11) commands+=("$base_command -app 50  -depot 51  -dir goldsrc_new") ;;  # Opposing Force
+                                12) commands+=("$base_command -app 10  -depot 11  -dir goldsrc_new") ;;  # CS
+                                13) commands+=("$base_command -app 20  -depot 21  -dir goldsrc_new") ;;  # TFC
                             esac
                         fi
 
-                        if [[ "$versao_manual" == "2" || "$versao_manual" == "3" ]]; then
-                            case "$opcao" in
-                                9)  comandos+=("$comando_base -beta steam_legacy -app 70  -depot 1   -dir goldsrc_old") ;;
-                                10) comandos+=("$comando_base -beta steam_legacy -app 130 -depot 130 -dir goldsrc_old") ;;
-                                11) comandos+=("$comando_base -beta steam_legacy -app 50  -depot 51  -dir goldsrc_old") ;;
-                                12) comandos+=("$comando_base -beta steam_legacy -app 10  -depot 11  -dir goldsrc_old") ;;
-                                13) comandos+=("$comando_base -beta steam_legacy -app 20  -depot 21  -dir goldsrc_old") ;;
+                        if [[ "$manual_version" == "2" || "$manual_version" == "3" ]]; then
+                            case "$option" in
+                                9)  commands+=("$base_command -beta steam_legacy -app 70  -depot 1   -dir goldsrc_old") ;;
+                                10) commands+=("$base_command -beta steam_legacy -app 130 -depot 130 -dir goldsrc_old") ;;
+                                11) commands+=("$base_command -beta steam_legacy -app 50  -depot 51  -dir goldsrc_old") ;;
+                                12) commands+=("$base_command -beta steam_legacy -app 10  -depot 11  -dir goldsrc_old") ;;
+                                13) commands+=("$base_command -beta steam_legacy -app 20  -depot 21  -dir goldsrc_old") ;;
                             esac
                         fi
                     done
@@ -179,14 +180,14 @@ while true; do
             fi
         done
     else
-        echo "Opção inválida."
+        echo "Invalid option."
         sleep 1
     fi
 done
 
-# Execução final
+# Final execution
 echo
-for cmd in "${comandos[@]}"; do
-    echo -e "${NEGRITO}Executando:${RESET} $cmd"
-    eval "$cmd" || { echo "Erro ao executar o comando acima."; exit 1; }
+for cmd in "${commands[@]}"; do
+    echo -e "${BOLD}Executing:${RESET} $cmd"
+    eval "$cmd" || { echo "Error executing the command above."; exit 1; }
 done
