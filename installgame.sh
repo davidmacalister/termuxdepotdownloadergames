@@ -20,8 +20,22 @@ read -p "Escolha uma opção (1-2): " tela_inicial
 comandos=()
 
 read -p "Digite seu nome de usuário Steam: " usuario
-read -s -p "Digite sua senha Steam: " senha
+read -p "Digite sua senha Steam: " -s senha_invisivel
 echo
+senha=""
+while IFS= read -r -s -n1 char; do
+    if [[ -z "$char" ]]; then
+        echo
+        break
+    fi
+    if [[ "$char" == $'\x7f' ]]; then
+        senha="${senha%?}"
+        echo -ne "\b \b"
+    else
+        senha+="$char"
+        echo -n "*"
+    fi
+done
 
 comando_base="depotdownloader -username $usuario -password '$senha' -remember-password -validate"
 
@@ -58,6 +72,7 @@ add_source() {
 
 # Escolha da opção principal
 if [[ "$tela_inicial" == "1" ]]; then
+    clear
     echo
     echo "Quais jogos você deseja baixar?"
     echo
@@ -68,6 +83,7 @@ if [[ "$tela_inicial" == "1" ]]; then
     read -p "Escolha uma opção (1-3): " todos_opcao
 
     if [[ "$todos_opcao" == "1" || "$todos_opcao" == "3" ]]; then
+        clear
         echo
         echo "Qual versão você deseja dos jogos Goldsrc?"
         echo
@@ -86,6 +102,7 @@ if [[ "$tela_inicial" == "1" ]]; then
     [[ "$todos_opcao" == "1" || "$todos_opcao" == "2" ]] && add_source
 
 elif [[ "$tela_inicial" == "2" ]]; then
+    clear
     echo
     echo "Quais jogos você deseja baixar?"
     echo
@@ -126,6 +143,7 @@ elif [[ "$tela_inicial" == "2" ]]; then
     done
 
     if [[ "${#goldsrc_opcoes[@]}" -gt 0 ]]; then
+        clear
         echo
         echo "Qual versão você deseja dos jogos Goldsrc?"
         echo
