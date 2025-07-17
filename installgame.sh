@@ -18,6 +18,7 @@ go_back_menu() {
 download_all_goldsrc() {
     clear
     echo
+    echo "Adding all Goldsrc games to the download queue..."
     echo "Which version of Goldsrc games do you want to download?"
     echo
     echo "1) 25th Anniversary version"
@@ -48,7 +49,7 @@ download_all_goldsrc() {
 download_all_source() {
     clear
     echo
-    echo "Downloading all Source games..."
+    echo "Adding all Source games to the download queue..."
     commands+=("$base_command -app 220 -depot 221 -dir source") # Half-Life 2
     commands+=("$base_command -app 220 -depot 389 -dir source") # Episode 1
     commands+=("$base_command -app 220 -depot 380 -dir source") # Episode 2
@@ -56,8 +57,6 @@ download_all_source() {
     commands+=("$base_command -app 240 -depot 241 -dir source -beta previous_build") # Counter-Strike: Source
     commands+=("$base_command -app 300 -depot 301 -dir source") # Day of Defeat: Source
     commands+=("$base_command -app 400 -depot 401 -dir source") # Portal
-    echo -e "${GREEN}All Source games added to the download queue.${RESET}"
-    sleep 1
 }
 
 # Main menu selection
